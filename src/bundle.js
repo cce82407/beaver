@@ -2,42 +2,80 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { HashRouter, Route, Link, Redirect, Switch} from 'react-router-dom';
 
-
-
-const Companies = ({ companies }) => {
+const Companies = ({ companies, products, offerings }) => {
+  
   return (
     <div>
-      <h1>Companies</h1>
+      <h2>Companies</h2>
       <ul>
         {
-          companies.map(company => <li>{ company.name }</li>)
+          companies.map(company => 
+            <div class = 'card-item' key = {company.id}>
+            <li class = 'company-name'>{ company.name }</li>
+            <div>{ company.catchPhrase }</div>
+            <div>Offering:</div>
+            <div>
+              <ul>
+                {
+                offerings
+                .filter(offering => offering.companyId === company.id)
+                .map(offering => {
+                  const product = products.find( product => product.id === offering.productId)
+                  offering.name = product.name
+                  return offering
+                 })
+                .map(offering => <li>{offering.name} {offering.price} </li>)
+                }
+              </ul>
+            </div>
+            </div>)
         }
       </ul>
     </div>
   )
 }
 
-const Products = ({ products }) => {
+const Products = ({ companies, products, offerings }) => {
   return (
     <div>
-      <h1>Products</h1>
+      <h2>Products</h2>
       <ul>
         {
-          products.map(product => <li>{ product.name }</li>)
+          products.map(product => 
+            <div class = 'card-item' key = {product.id}>
+            <li class = 'company-name'>{ product.name }</li>
+            <div>${ product.suggestedPrice }</div>
+            <div>{ product.description }</div>
+            <div>Offered by:</div>
+            { <div>
+              <ul>
+                {
+                offerings
+                .filter(offering => offering.productId === product.id)
+                .map(offering => {
+                  const company = companies.find( company => company.id === offering.companyId)
+                  offering.companyName = company.name
+                  return offering
+                 })
+                .map(offering => <li> {offering.companyName} </li>)
+                }
+              </ul>
+            </div> 
+            }
+            </div>)
         }
       </ul>
     </div>
   )
 }
-
 
 const Nav = ({path, companies, products }) => {
   
   return (
     <nav>
       <div>ACME OFFERINGS * REACT</div>
-    <Link to= '/companies' className = {path === '/companies ' ? 'selected': ''}>Companies ({companies.length}) </Link> 
-    <Link to= '/products' className = {path === '/products ' ? 'selected': ''}>Products ({products.length}) </Link> 
+    <Link to= '/companies'  className = {path === '/companies ' ? 'selected': ''}>Companies ({companies.length}) </Link> 
+    <Link to= '/products'  className = {path === '/products ' ? 'selected': ''}>Products ({products.length}) </Link> 
     </nav>
   )
 }
@@ -63,15 +101,17 @@ class App extends Component {
   }
   
   render() {
+    
     const { companies, products, offerings } = this.state
+    console.log(this.state)
     //return <h1>Welcome to the JSX world...</h1>
     return (
       <HashRouter>
         <Route render= { ({ location }) => <Nav path = { location.pathname } products = { products } 
         companies = { companies }/> }/>
         <Switch>
-        <Route path ='/companies' render={ ()=> <Companies companies ={companies}/>} />
-        <Route path ='/products' render={ ()=> <Products products ={products}/>} />
+        <Route path ='/companies' render={ ()=> <Companies companies={ companies } products = {products} offerings = {offerings}/>} /> 
+        <Route path ='/products' render={ ()=> <Products companies={ companies } products = {products} offerings = {offerings}/>} />
         <Redirect to = '/companies' />
         </Switch>
     </HashRouter>
