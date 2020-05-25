@@ -1,3 +1,4 @@
+ 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -24,7 +25,7 @@ class App extends Component {
           }}
           src="https://pbs.twimg.com/profile_images/2779323089/f1d2488fedff90047a32244dbc624e59_400x400.jpeg"
         />
-        <h2>Beaver</h2>
+        <h2>The coolest Beaver</h2>
       </div>
     );
   }
