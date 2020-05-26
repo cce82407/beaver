@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { HashRouter, Route, Link, Redirect, Switch} from 'react-router-dom';
+import { render } from 'react-dom';
+
 
 const Companies = ({ companies, products, offerings }) => {
   
@@ -10,8 +11,8 @@ const Companies = ({ companies, products, offerings }) => {
       <ul>
         {
           companies.map(company => 
-            <div class = 'card-item' key = {company.id}>
-            <li class = 'company-name'>{ company.name }</li>
+            <div className = 'card-item' key = { company.id }>
+            <li className = 'company-name'>{ company.name }</li>
             <div>{ company.catchPhrase }</div>
             <div>Offering:</div>
             <div>
@@ -42,8 +43,8 @@ const Products = ({ companies, products, offerings }) => {
       <ul>
         {
           products.map(product => 
-            <div class = 'card-item' key = {product.id}>
-            <li class = 'company-name'>{ product.name }</li>
+            <div className = 'card-item' key = {product.id}>
+            <li className = 'company-name'>{ product.name }</li>
             <div>${ product.suggestedPrice }</div>
             <div>{ product.description }</div>
             <div>Offered by:</div>
@@ -70,12 +71,14 @@ const Products = ({ companies, products, offerings }) => {
 }
 
 const Nav = ({path, companies, products }) => {
+  console.log(path)
   
   return (
+  
     <nav>
       <div>ACME OFFERINGS * REACT</div>
-    <Link to= '/companies'  className = {path === '/companies ' ? 'selected': ''}>Companies ({companies.length}) </Link> 
-    <Link to= '/products'  className = {path === '/products ' ? 'selected': ''}>Products ({products.length}) </Link> 
+    <Link to= '/companies'  >Companies ({companies.length}) </Link> 
+    <Link  to= '/products' className = { (path === '/products') ? 'selected' : ''} >Products ({products.length}) </Link> 
     </nav>
   )
 }
@@ -104,13 +107,14 @@ class App extends Component {
     
     const { companies, products, offerings } = this.state
     console.log(this.state)
+    console.log(props)
     //return <h1>Welcome to the JSX world...</h1>
     return (
       <HashRouter>
-        <Route render= { ({ location }) => <Nav path = { location.pathname } products = { products } 
+        <Route render= { (props) => <Nav path = { props.location.pathname } products = { products } 
         companies = { companies }/> }/>
         <Switch>
-        <Route path ='/companies' render={ ()=> <Companies companies={ companies } products = {products} offerings = {offerings}/>} /> 
+        <Route path ='companies' render={ ()=> <Companies companies={ companies } products = {products} offerings = {offerings}/>} /> 
         <Route path ='/products' render={ ()=> <Products companies={ companies } products = {products} offerings = {offerings}/>} />
         <Redirect to = '/companies' />
         </Switch>
